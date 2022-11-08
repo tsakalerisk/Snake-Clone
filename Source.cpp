@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <time.h>
 
+#include <iostream>
+#include <list>
+#include <queue>
 #include <string>
 
 enum { UP, DOWN, LEFT, RIGHT, DEFAULT };
@@ -24,49 +27,21 @@ typedef struct {
     int x, y;
 } coord;
 
-typedef struct ListNode* ListPointer;
-typedef struct ListNode {
-    coord Data;
-    ListPointer Next;
-    ListPointer Prev;
-} ListNode;
-
-typedef struct QueueNode* QueuePointer;
-typedef struct QueueNode {
-    SDL_Event Data;
-    QueuePointer Next;
-} QueueNode;
-typedef struct {
-    QueuePointer Front = NULL;
-    QueuePointer Rear = NULL;
-} QueueType;
-
 bool init();
 bool loadMedia();
 void close();
 SDL_Texture* loadTexture(std::string path);
-void LinkedInsert(ListPointer* List, coord Item, ListPointer PredPtr,
-                  ListPointer* LastPtr);
-void AdvanceList(ListPointer List, coord newTile);
-bool Search(ListPointer List, coord item);
-void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
-                ListPointer worm_tail, SDL_Rect* tile, double* rotation, int i,
-                char looking);
-void DeleteTail(ListPointer* worm_tail);
-void ResetGame(ListPointer* worm_tail, char* looking, ListPointer* worm_head,
-               coord* fruit);
+bool Search(std::list<coord> snake, coord item);
+void SelectTile(std::list<coord>::iterator const& iter, std::list<coord> snake,
+                SDL_Rect* tile, double* rotation, int i, char looking);
+void ResetGame(std::list<coord>& snake, char* looking, coord* fruit);
 bool loadTextToTexture(std::string text, SDL_Color color, int* w, int* h);
 int nOfDigits(long number);
 long GetHighScore();
 void SetHighScore(long highscore);
-void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
-          coord* fruit);
-void Update(char looking, ListPointer worm_tail, ListPointer worm_head,
-            coord fruit);
-void AddQ(QueueType* Queue, SDL_Event Item);
-int RemoveQ(QueueType* Queue, SDL_Event* Item);
-void InitGame(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
-              coord* fruit);
+void Move(char* looking, std::list<coord>& snake, coord* fruit);
+void Update(char looking, std::list<coord> snake, coord fruit);
+void InitGame(char* looking, std::list<coord>& snake, coord* fruit);
 void MainMenu();
 void PauseMenu();
 void SkinMenu();
@@ -75,8 +50,9 @@ void RenderMenu(SDL_Rect menu_rect, int nOptions, std::string* options,
 void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
 bool SkinExists(int n);
 std::string ResourcesSlash(std::string file);
+inline bool operator==(const coord& lhs, const coord& rhs);
 
-std::string gResourcesPath = "C:\\Users\\User\\Desktop\\Worm\\Resources\\";
+std::string gResourcesPath = "Resources\\";
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int GAME_HEIGHT = SCREEN_HEIGHT - 40;
@@ -101,17 +77,17 @@ int main(int argc, char* agrs[]) {
         printf("Falied to initialize!\n");
     } else {
         if (!loadMedia()) {
-            printf("Falied to load media!\n");
+            printf("Failed to load media!\n");
         } else {
             bool quit = false;
             SDL_Event e;
             char looking;
             Uint32 start_time = SDL_GetTicks(), curr_time;
-            ListPointer worm_tail = NULL, worm_head = NULL;
+            std::list<coord> snake;
             coord fruit;
             srand((int)time(NULL));
-            QueueType KeyPressQ;
-            InitGame(&looking, &worm_tail, &worm_head, &fruit);
+            std::queue<SDL_Event> KeyPressQ;
+            InitGame(&looking, snake, &fruit);
             MainMenu();
             while (!quit) {
                 while (SDL_PollEvent(&e) != 0) {
@@ -123,11 +99,10 @@ int main(int argc, char* agrs[]) {
                             case SDLK_DOWN:
                             case SDLK_RIGHT:
                             case SDLK_LEFT:
-                                AddQ(&KeyPressQ, e);
+                                KeyPressQ.push(e);
                                 break;
                             case SDLK_SPACE:
-                                LinkedInsert(&worm_tail, worm_tail->Data, NULL,
-                                             &worm_head);
+                                snake.push_back(snake.back());
                                 break;
                             case SDLK_ESCAPE:
                                 PauseMenu();
@@ -139,15 +114,16 @@ int main(int argc, char* agrs[]) {
                 curr_time = SDL_GetTicks();
                 if (curr_time - start_time > 130) {
                     start_time = curr_time;
-                    SDL_Event key_press;
                     bool moved = false;
-                    while (RemoveQ(&KeyPressQ, &key_press) != 0) {
+                    SDL_Event key_press;
+                    while (!KeyPressQ.empty()) {
+                        key_press = KeyPressQ.front();
+                        KeyPressQ.pop();
                         switch (key_press.key.keysym.sym) {
                             case SDLK_UP:
                                 if (looking != UP && looking != DOWN) {
                                     looking = UP;
-                                    Move(&looking, &worm_tail, &worm_head,
-                                         &fruit);
+                                    Move(&looking, snake, &fruit);
                                     moved = true;
                                 }
                                 break;
@@ -155,33 +131,30 @@ int main(int argc, char* agrs[]) {
                                 if (looking != DOWN && looking != UP &&
                                     looking != DEFAULT) {
                                     looking = DOWN;
-                                    Move(&looking, &worm_tail, &worm_head,
-                                         &fruit);
+                                    Move(&looking, snake, &fruit);
                                     moved = true;
                                 }
                                 break;
                             case SDLK_LEFT:
                                 if (looking != LEFT && looking != RIGHT) {
                                     looking = LEFT;
-                                    Move(&looking, &worm_tail, &worm_head,
-                                         &fruit);
+                                    Move(&looking, snake, &fruit);
                                     moved = true;
                                 }
                                 break;
                             case SDLK_RIGHT:
                                 if (looking != RIGHT && looking != LEFT) {
                                     looking = RIGHT;
-                                    Move(&looking, &worm_tail, &worm_head,
-                                         &fruit);
+                                    Move(&looking, snake, &fruit);
                                     moved = true;
                                 }
                                 break;
                         }
                     }
                     if (looking != DEFAULT && !moved) {
-                        Move(&looking, &worm_tail, &worm_head, &fruit);
+                        Move(&looking, snake, &fruit);
                     }
-                    Update(looking, worm_tail, worm_head, fruit);
+                    Update(looking, snake, fruit);
                 }
             }
         }
@@ -236,16 +209,10 @@ int nOfDigits(long number) {
     return digit;
 }
 
-void ResetGame(ListPointer* worm_tail, char* looking, ListPointer* worm_head,
-               coord* fruit) {
-    while (*worm_tail != NULL) {
-        DeleteTail(worm_tail);
-    }
-    *worm_head = NULL;
+void ResetGame(std::list<coord>& snake, char* looking, coord* fruit) {
+    while (!snake.empty()) snake.pop_back();
     for (int i = 0; i < 3; i++) {
-        LinkedInsert(worm_tail,
-                     {SCREEN_WIDTH / 2, GAME_HEIGHT / 2 + (i - 1) * 20}, NULL,
-                     worm_head);
+        snake.push_back({SCREEN_WIDTH / 2, GAME_HEIGHT / 2 + (i - 1) * 20});
     }
     *looking = DEFAULT;
     gHighScore = GetHighScore();
@@ -257,22 +224,12 @@ void ResetGame(ListPointer* worm_tail, char* looking, ListPointer* worm_head,
     do {
         fruit->x = rand() % (SCREEN_WIDTH / 20) * 20;
         fruit->y = rand() % (GAME_HEIGHT / 20) * 20;
-    } while (Search(*worm_tail, *fruit));
+    } while (Search(snake, *fruit));
 }
 
-void DeleteTail(ListPointer* worm_tail) {
-    if (*worm_tail != NULL) {
-        ListPointer TmpPtr = *worm_tail;
-        *worm_tail = TmpPtr->Next;
-        free(TmpPtr);
-        if (*worm_tail != NULL) (*worm_tail)->Prev = NULL;
-    }
-}
-
-void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
-                ListPointer worm_tail, SDL_Rect* tile, double* rotation, int i,
-                char looking) {
-    if (CurrPtr == worm_head) {
+void SelectTile(std::list<coord>::iterator const& iter, std::list<coord> snake,
+                SDL_Rect* tile, double* rotation, int i, char looking) {
+    if (*iter == *(snake.begin())) {
         tile->x = HEAD;
 
         switch (looking) {
@@ -289,39 +246,36 @@ void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
                 *rotation = 0;
                 break;
         }
-    } else if (CurrPtr == worm_tail) {
+    } else if (*iter == *(std::prev(snake.end()))) {
         if (i % 2 == 0) {
             tile->x = TAIL_BLACK;
         } else {
             tile->x = TAIL_YELLOW;
         }
-
-        coord next = CurrPtr->Next->Data;
-        coord curr = CurrPtr->Data;
-        if (next.x == curr.x) {  // up or down
-            if (next.y == curr.y - 20)
+        std::list<coord>::iterator next = std::prev(iter);
+        if (next->x == iter->x) {  // up or down
+            if (next->y == iter->y - 20)
                 *rotation = 0;
-            else if (next.y == curr.y + 20)
+            else if (next->y == iter->y + 20)
                 *rotation = 180;
-        } else if (next.y == curr.y) {  // left or right
-            if (next.x == curr.x - 20)
+        } else if (next->y == iter->y) {  // left or right
+            if (next->x == iter->x - 20)
                 *rotation = -90;
-            else if (next.x == curr.x + 20)
+            else if (next->x == iter->x + 20)
                 *rotation = 90;
         }
     } else {
-        coord pred = CurrPtr->Prev->Data;
-        coord curr = CurrPtr->Data;
-        coord next = CurrPtr->Next->Data;
+        std::list<coord>::iterator pred = std::prev(iter);
+        std::list<coord>::iterator next = std::next(iter);
 
-        if (pred.x == next.x) {  // vertical line
+        if (pred->x == next->x) {  // vertical line
             *rotation = 0;
             if (i % 2 == 0) {
                 tile->x = BODY_BLACK;
             } else {
                 tile->x = BODY_YELLOW;
             }
-        } else if (pred.y == next.y) {  // horizontal line
+        } else if (pred->y == next->y) {  // horizontal line
             *rotation = 90;
             if (i % 2 == 0) {
                 tile->x = BODY_BLACK;
@@ -329,8 +283,8 @@ void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
                 tile->x = BODY_YELLOW;
             }
         } else {                                                       // corner
-            if (pred.y == curr.y - 20 || next.y == curr.y - 20) {      // J or L
-                if (pred.x == curr.x - 20 || next.x == curr.x - 20) {  // J
+            if (pred->y == iter->y - 20 || next->y == iter->y - 20) {  // J or L
+                if (pred->x == iter->x - 20 || next->x == iter->x - 20) {  // J
                     *rotation = 0;
                     if (i % 2 == 0) {
                         tile->x = CORNER_BLACK;
@@ -346,8 +300,8 @@ void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
                     }
                 }
             } else {  // gamma or mirror gamma
-                if (pred.x == curr.x - 20 ||
-                    next.x == curr.x - 20) {  // mirror gamma
+                if (pred->x == iter->x - 20 ||
+                    next->x == iter->x - 20) {  // mirror gamma
                     *rotation = -90;
                     if (i % 2 == 0) {
                         tile->x = CORNER_BLACK;
@@ -367,45 +321,11 @@ void SelectTile(ListPointer CurrPtr, ListPointer worm_head,
     }
 }
 
-void AdvanceList(ListPointer List, coord newTile) {
-    ListPointer CurrPtr = List;
-    if (CurrPtr != NULL) {
-        while (CurrPtr->Next != NULL) {
-            CurrPtr->Data = CurrPtr->Next->Data;
-            CurrPtr = CurrPtr->Next;
-        }
-        CurrPtr->Data = newTile;
-    }
-}
-
-bool Search(ListPointer List, coord item) {
-    ListPointer CurrPtr = List;
-    while (CurrPtr != NULL) {
-        if (CurrPtr->Data.x == item.x && CurrPtr->Data.y == item.y) return true;
-        CurrPtr = CurrPtr->Next;
+bool Search(std::list<coord> list, coord item) {
+    for (auto const& i : list) {
+        if (i == item) return true;
     }
     return false;
-}
-
-void LinkedInsert(ListPointer* List, coord Item, ListPointer PredPtr,
-                  ListPointer* LastPtr) {
-    ListPointer TempPtr;
-    TempPtr = (ListPointer)malloc(sizeof(struct ListNode));
-    if (TempPtr != NULL) {
-        TempPtr->Data = Item;
-        if (PredPtr == NULL) {
-            TempPtr->Next = *List;
-            if (*List != NULL) (*List)->Prev = TempPtr;
-            *List = TempPtr;
-            TempPtr->Prev = NULL;
-        } else {
-            TempPtr->Next = PredPtr->Next;
-            if (TempPtr->Next != NULL) TempPtr->Next->Prev = TempPtr;
-            PredPtr->Next = TempPtr;
-            TempPtr->Prev = PredPtr;
-        }
-        if (TempPtr->Next == NULL) *LastPtr = TempPtr;
-    }
 }
 
 bool init() {
@@ -532,9 +452,8 @@ bool loadTextToTexture(std::string text, SDL_Color color, int* w, int* h) {
     return gTextTexture != NULL;
 }
 
-void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
-          coord* fruit) {
-    coord new_head = (*worm_head)->Data;
+void Move(char* looking, std::list<coord>& snake, coord* fruit) {
+    coord new_head = snake.front();
     bool moved = false;
     switch (*looking) {
         case UP:
@@ -542,7 +461,7 @@ void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
                 new_head.y -= 20;
                 moved = true;
             } else {
-                ResetGame(worm_tail, looking, worm_head, fruit);
+                ResetGame(snake, looking, fruit);
             }
             break;
         case DOWN:
@@ -550,7 +469,7 @@ void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
                 new_head.y += 20;
                 moved = true;
             } else {
-                ResetGame(worm_tail, looking, worm_head, fruit);
+                ResetGame(snake, looking, fruit);
             }
             break;
         case LEFT:
@@ -558,7 +477,8 @@ void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
                 new_head.x -= 20;
                 moved = true;
             } else {
-                ResetGame(worm_tail, looking, worm_head, fruit);
+                ResetGame(snake, looking, fruit);
+                ;
             }
             break;
         case RIGHT:
@@ -566,47 +486,45 @@ void Move(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
                 new_head.x += 20;
                 moved = true;
             } else {
-                ResetGame(worm_tail, looking, worm_head, fruit);
+                ResetGame(snake, looking, fruit);
             }
             break;
     }
     if (moved) {
-        if (Search(*worm_tail, new_head)) {
-            ResetGame(worm_tail, looking, worm_head, fruit);
+        if (Search(snake, new_head)) {
+            ResetGame(snake, looking, fruit);
         } else {
-            AdvanceList(*worm_tail, new_head);
-            if ((*worm_head)->Data.x == fruit->x &&
-                (*worm_head)->Data.y == fruit->y) {
-                LinkedInsert(worm_tail, (*worm_tail)->Data, NULL, worm_head);
+            snake.pop_back();
+            snake.push_front(new_head);
+            if (snake.front().x == fruit->x && snake.front().y == fruit->y) {
+                snake.push_back(snake.back());
                 gScore += 5;
                 do {
                     fruit->x = rand() % (SCREEN_WIDTH / 20) * 20;
                     fruit->y = rand() % (GAME_HEIGHT / 20) * 20;
-                } while (Search(*worm_tail, *fruit));
+                } while (Search(snake, *fruit));
             }
         }
     }
 }
 
-void Update(char looking, ListPointer worm_tail, ListPointer worm_head,
-            coord fruit) {
+void Update(char looking, std::list<coord> snake, coord fruit) {
     SDL_RenderSetViewport(gRenderer, NULL);
     SDL_RenderCopy(gRenderer, gTexture, NULL, &gGameRect);
-    ListPointer CurrPtr = worm_head;
     int i = 0;
-    while (CurrPtr != NULL) {
-        SDL_Rect position = {CurrPtr->Data.x, CurrPtr->Data.y, 20, 20};
+    std::list<coord>::iterator iter = snake.begin();
+    for (auto iter = snake.begin(); iter != snake.end(); iter++) {
+        SDL_Rect position = {iter->x, iter->y, 20, 20};
         SDL_Rect tile;
         double rotation;
         tile.y = 0;
         tile.w = 20;
         tile.h = 20;
-        SelectTile(CurrPtr, worm_head, worm_tail, &tile, &rotation, i, looking);
+        SelectTile(iter, snake, &tile, &rotation, i, looking);
         tile.x *= 20;
         SDL_RenderCopyEx(gRenderer, gTextureWorm, &tile, &position, rotation,
                          NULL, SDL_FLIP_NONE);
         ;
-        CurrPtr = CurrPtr->Prev;
         i++;
     }
     SDL_Rect fruit_rect = {fruit.x, fruit.y, 20, 20};
@@ -643,37 +561,8 @@ void Update(char looking, ListPointer worm_tail, ListPointer worm_head,
     SDL_RenderSetViewport(gRenderer, NULL);
 }
 
-void AddQ(QueueType* Queue, SDL_Event Item) {
-    QueuePointer TempPtr;
-    TempPtr = (QueuePointer)malloc(sizeof(struct QueueNode));
-    if (TempPtr != NULL) {
-        TempPtr->Data = Item;
-        TempPtr->Next = NULL;
-        if (Queue->Front == NULL)
-            Queue->Front = TempPtr;
-        else
-            Queue->Rear->Next = TempPtr;
-        Queue->Rear = TempPtr;
-    }
-}
-
-int RemoveQ(QueueType* Queue, SDL_Event* Item) {
-    QueuePointer TempPtr;
-    if (Queue->Front == NULL) {  // empty queue
-        return 0;
-    } else {
-        TempPtr = Queue->Front;
-        *Item = TempPtr->Data;
-        Queue->Front = Queue->Front->Next;
-        free(TempPtr);
-        if (Queue->Front == NULL) Queue->Rear = NULL;
-        return 1;
-    }
-}
-
-void InitGame(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
-              coord* fruit) {
-    ResetGame(worm_tail, looking, worm_head, fruit);
+void InitGame(char* looking, std::list<coord>& snake, coord* fruit) {
+    ResetGame(snake, looking, fruit);
     SDL_SetRenderDrawColor(gRenderer, 0x10, 0x10, 0x10, 0xff);
     SDL_RenderFillRect(gRenderer, &gInfoRect);
     int text_w, text_h;
@@ -683,7 +572,7 @@ void InitGame(char* looking, ListPointer* worm_tail, ListPointer* worm_head,
     text_rect.w = text_w;
     text_rect.h = text_h;
     SDL_RenderCopy(gRenderer, gTextTexture, NULL, &text_rect);
-    Update(*looking, *worm_tail, *worm_head, *fruit);
+    Update(*looking, snake, *fruit);
 }
 
 void MainMenu() {
@@ -721,13 +610,10 @@ void MainMenu() {
                                 stop = true;
                                 break;
                             case MAIN_CHANGE_SKIN: {
-                                SDL_Surface *win_surface =
-                                                SDL_GetWindowSurface(gWindow),
-                                            *temp_surface =
-                                                SDL_CreateRGBSurface(
-                                                    0, SCREEN_WIDTH,
-                                                    SCREEN_HEIGHT, 32, 0, 0, 0,
-                                                    0);
+                                SDL_Surface* temp_surface =
+                                    SDL_CreateRGBSurface(0, SCREEN_WIDTH,
+                                                         SCREEN_HEIGHT, 32, 0,
+                                                         0, 0, 0);
                                 SDL_RenderReadPixels(gRenderer, NULL, 0,
                                                      temp_surface->pixels,
                                                      temp_surface->pitch);
@@ -788,13 +674,10 @@ void PauseMenu() {
                                 stop = true;
                                 break;
                             case PAUSE_CHANGE_SKIN: {
-                                SDL_Surface *win_surface =
-                                                SDL_GetWindowSurface(gWindow),
-                                            *temp_surface =
-                                                SDL_CreateRGBSurface(
-                                                    0, SCREEN_WIDTH,
-                                                    SCREEN_HEIGHT, 32, 0, 0, 0,
-                                                    0);
+                                SDL_Surface* temp_surface =
+                                    SDL_CreateRGBSurface(0, SCREEN_WIDTH,
+                                                         SCREEN_HEIGHT, 32, 0,
+                                                         0, 0, 0);
                                 SDL_RenderReadPixels(gRenderer, NULL, 0,
                                                      temp_surface->pixels,
                                                      temp_surface->pitch);
@@ -1011,4 +894,8 @@ std::string ResourcesSlash(std::string file) {
     std::string path = gResourcesPath;
     path.append(file);
     return path;
+}
+
+inline bool operator==(const coord& lhs, const coord& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
 }
