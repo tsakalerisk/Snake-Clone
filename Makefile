@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = Source.cpp
+OBJS = Source.cpp Game.cpp SnakeGame.cpp Snake.cpp Texture.cpp
 
 #CC specifies which compiler we're using
 CC = g++
@@ -25,8 +25,9 @@ OBJ_NAME = Build/Worm.exe
 all : build
 	./$(OBJ_NAME)
 
+#-g is for debugging
 build : $(OBJS) Worm.res
-	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	$(CC) -g $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
 	powershell "Remove-Item -ErrorAction Ignore Worm.res; $$null"
 
 Worm.res :
