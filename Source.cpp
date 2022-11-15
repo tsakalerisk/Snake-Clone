@@ -26,7 +26,7 @@ bool SkinExists(int n);
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-std::string gResourcesPath = "Resources\\";
+std::string gResourcesPath = "..\\Resources\\";
 
 long gScore = 0, gHighScore;
 std::string gMain_Options[N_MAIN_OPTIONS] = {"START", "CHANGE  SKIN", "QUIT"};
