@@ -20,5 +20,6 @@ class Font {
         mFont = nullptr;
     }
 
-    TTF_Font* getFont() { return mFont; }
+    inline TTF_Font* getFont() { return mFont; }
+    inline int getHeight() { return TTF_FontHeight(mFont); }
 };

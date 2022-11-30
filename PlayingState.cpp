@@ -7,6 +7,7 @@
 
 #include "DeathState.hpp"
 #include "Game.hpp"
+#include "PauseState.hpp"
 
 void PlayingState::init(Game* game) {
     loadMedia();
@@ -44,7 +45,7 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
                 snake->grow();
                 break;
             case SDLK_ESCAPE:
-                // PauseMenu();
+                game->pushState(PauseState::instance());
                 break;
         }
     }

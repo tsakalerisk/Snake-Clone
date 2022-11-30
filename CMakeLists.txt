@@ -11,6 +11,7 @@ add_executable(Snake
     Game.cpp Game.hpp 
     GameState.hpp
     Font.hpp
+    PauseState.cpp PauseState.hpp
     PlayingState.cpp PlayingState.hpp 
     Score.hpp 
     Snake.cpp Snake.hpp 

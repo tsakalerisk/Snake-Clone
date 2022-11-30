@@ -1,14 +1,10 @@
 #include "Game.hpp"
 
 //enum { START, MAIN_CHANGE_SKIN, MAIN_QUIT, N_MAIN_OPTIONS };
-//enum { CONTINUE, PAUSE_CHANGE_SKIN, PAUSE_QUIT, N_PAUSE_OPTIONS };
 //enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
 
 // void MainMenu();
-// void PauseMenu();
 // void SkinMenu();
-// void RenderMenu(SDL_Rect menu_rect, int nOptions, std::string* options,
-//                 int selection);
 // void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
 // bool SkinExists(int n);
 
@@ -19,8 +15,6 @@ std::string gResourcesPath = "..\\Resources\\";
 
 long gScore = 0, gHighScore;
 //std::string gMain_Options[N_MAIN_OPTIONS] = {"START", "CHANGE  SKIN", "QUIT"};
-//std::string gPause_Options[N_PAUSE_OPTIONS] = {"CONTINUE", "CHANGE  SKIN",
-//                                               "QUIT"};
 //std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
 
 SDL_Window* gWindow;
@@ -84,72 +78,6 @@ int main(int argc, char* agrs[]) {
 //                                 SDL_FreeSurface(temp_surface);
 //                             } break;
 //                             case MAIN_QUIT:
-//                                 stop = true;
-//                                 close();
-//                                 exit(0);
-//                         }
-//                         break;
-//                 }
-//             }
-//         }
-//     }
-// }
-
-// void PauseMenu() {
-//     SDL_Rect menu_rect;
-//     menu_rect.x = gGameRect.x;  // 0
-//     menu_rect.h = N_PAUSE_OPTIONS * TTF_FontHeight(gFont) + 1;
-//     menu_rect.y = (gGameRect.h - menu_rect.h) / 2;
-//     menu_rect.w = gGameRect.w;
-//     int selection = 0;  // START
-//     RenderMenu(menu_rect, N_PAUSE_OPTIONS, gPause_Options, selection);
-//     bool stop = false;
-//     while (!stop) {
-//         SDL_Event e;
-//         while (SDL_PollEvent(&e) != 0) {
-//             if (e.type == SDL_QUIT) {
-//                 stop = true;
-//                 close();
-//                 exit(0);
-//             } else if (e.type == SDL_KEYDOWN) {
-//                 switch (e.key.keysym.sym) {
-//                     case SDLK_UP:
-//                         if (selection > 0) selection--;
-//                         RenderMenu(menu_rect, N_PAUSE_OPTIONS,
-//                         gPause_Options,
-//                                    selection);
-//                         break;
-//                     case SDLK_DOWN:
-//                         if (selection < N_MAIN_OPTIONS - 1) selection++;
-//                         RenderMenu(menu_rect, N_PAUSE_OPTIONS,
-//                         gPause_Options,
-//                                    selection);
-//                         break;
-//                     case SDLK_SPACE:
-//                     case SDLK_RETURN:  // enter
-//                         switch (selection) {
-//                             case CONTINUE:
-//                                 stop = true;
-//                                 break;
-//                             case PAUSE_CHANGE_SKIN: {
-//                                 SDL_Surface* temp_surface =
-//                                     SDL_CreateRGBSurface(0, SCREEN_WIDTH,
-//                                                          SCREEN_HEIGHT, 32,
-//                                                          0, 0, 0, 0);
-//                                 SDL_RenderReadPixels(gRenderer, NULL, 0,
-//                                                      temp_surface->pixels,
-//                                                      temp_surface->pitch);
-//                                 SDL_Texture* temp_texture =
-//                                     SDL_CreateTextureFromSurface(gRenderer,
-//                                                                  temp_surface);
-//                                 SkinMenu();
-//                                 SDL_RenderCopy(gRenderer, temp_texture, NULL,
-//                                                NULL);
-//                                 SDL_RenderPresent(gRenderer);
-//                                 SDL_DestroyTexture(temp_texture);
-//                                 SDL_FreeSurface(temp_surface);
-//                             } break;
-//                             case PAUSE_QUIT:
 //                                 stop = true;
 //                                 close();
 //                                 exit(0);
@@ -271,33 +199,6 @@ int main(int argc, char* agrs[]) {
 //             }
 //         }
 //     }
-// }
-
-// void RenderMenu(SDL_Rect menu_rect, int nOptions, std::string* options,
-//                 int selection) {
-//     SDL_SetRenderDrawColor(gRenderer, 0x10, 0x10, 0x10, 0xff);
-//     SDL_RenderFillRect(gRenderer, &menu_rect);
-
-//     int text_w, text_h;
-//     for (int i = 0; i < nOptions; i++) {
-//         loadTextToTexture(options[i], {0xff, 0xff, 0xff}, &text_w, &text_h);
-//         SDL_Rect text_rect;
-//         text_rect.x = (menu_rect.x + menu_rect.w - text_w) / 2;
-//         text_rect.y = menu_rect.y + i * text_h;
-//         text_rect.w = text_w;
-//         text_rect.h = text_h;
-//         SDL_RenderCopy(gRenderer, gTextTexture, NULL, &text_rect);
-//         if (i == selection) {
-//             SDL_SetRenderDrawColor(gRenderer, 0x88, 0, 0, 0xff);
-//             SDL_RenderDrawLine(gRenderer, menu_rect.x, text_rect.y,
-//                                menu_rect.x + menu_rect.w, text_rect.y);
-//             SDL_RenderDrawLine(
-//                 gRenderer, menu_rect.x, text_rect.y + text_rect.h,
-//                 menu_rect.x + menu_rect.w, text_rect.y + text_rect.h);
-//         }
-//     }
-
-//     SDL_RenderPresent(gRenderer);
 // }
 
 // void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed) {
