@@ -1,9 +1,9 @@
-#include "PauseState.hpp"
+#include "MainMenuState.hpp"
 
 // Select the option where the cursor is
-void PauseState::select(Game* game) {
+void MainMenuState::select(Game* game) {
     switch (getSelection()) {
-        case CONTINUE:
+        case START:
             game->popState();
             break;
         case CHANGE_SKIN: {

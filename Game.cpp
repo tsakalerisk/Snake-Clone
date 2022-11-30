@@ -4,6 +4,7 @@
 #include <SDL_ttf.h>
 
 #include "GameState.hpp"
+#include "MainMenuState.hpp"
 #include "PlayingState.hpp"
 
 extern SDL_Window* gWindow;
@@ -15,7 +16,9 @@ Game::Game(std::string name, const int width, const int height)
     : width(width), height(height) {
     if (!SDL_Init(name, width, height)) printf("SDL initialization error!");
 
-    changeState(PlayingState::instance());
+    pushState(PlayingState::instance());
+    render();
+    pushState(MainMenuState::instance());
 
     Uint32 start_time = SDL_GetTicks();
     while (mRunning) {

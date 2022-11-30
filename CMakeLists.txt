@@ -4,18 +4,20 @@ project(Snake)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Snake 
+add_executable(Snake
     Worm.rc
-    coord.hpp 
+    coord.hpp
     DeathState.cpp DeathState.hpp
-    Game.cpp Game.hpp 
+    Game.cpp Game.hpp
     GameState.hpp
     Font.hpp
+    MainMenuState.cpp MainMenuState.hpp
+    MenuState.cpp MenuState.hpp
     PauseState.cpp PauseState.hpp
-    PlayingState.cpp PlayingState.hpp 
-    Score.hpp 
-    Snake.cpp Snake.hpp 
-    Source.cpp 
+    PlayingState.cpp PlayingState.hpp
+    Score.hpp
+    Snake.cpp Snake.hpp
+    Source.cpp
     Texture.cpp Texture.hpp)
 
 target_include_directories(Snake PUBLIC D:/Konstantinos/Programming/libraries/include/SDL2)
