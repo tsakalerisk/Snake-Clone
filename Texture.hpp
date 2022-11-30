@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include "Font.hpp"
+
 extern SDL_Renderer* gRenderer;
 
 class Texture {
@@ -20,8 +22,7 @@ class Texture {
     bool loadFromFile(std::string path);
 
     // Creates image from font string
-    bool loadFromRenderedText(std::string textureText, TTF_Font* font,
-                              SDL_Color textColor);
+    bool loadFromText(std::string textureText, Font& font, SDL_Color textColor);
 
     // Deallocates texture
     void free();

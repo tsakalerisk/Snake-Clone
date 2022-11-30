@@ -1,25 +1,24 @@
-#include <stdio.h>
-
+#include <cstdio>
 #include <iomanip>
 #include <sstream>
 
 #include "Texture.hpp"
 
-extern SDL_Renderer* gRenderer;
+extern std::string gResourcesPath;
 
 class Score {
    private:
     long value, highscore;
     Texture gTextTexture;
-    TTF_Font* gFont = NULL;
+    Font font = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 
    public:
-    Score(TTF_Font* gFont) : gFont(gFont) {
+    Score() {
         value = 0;
         highscore = GetHighScore();
     }
 
-    long get() { return value; }
+    long get() const { return value; }
 
     void add(long amount) {
         if ((value += amount) > highscore) highscore = value;
@@ -30,7 +29,7 @@ class Score {
         value = 0;
     }
 
-    long GetHighScore() {
+    static long GetHighScore() {
         FILE* highscore_file = fopen("highscore.worm", "rb");
         long highscore = 0;
         if (highscore_file != NULL) {
@@ -40,33 +39,32 @@ class Score {
         return highscore;
     }
 
-    void SetHighScore(long highscore) {
+    static void SetHighScore(long highscore) {
         FILE* highscore_file = fopen("highscore.worm", "wb");
-        if (highscore_file != NULL) {
+        if (highscore_file != nullptr) {
             fwrite(&highscore, sizeof(long), 1, highscore_file);
             fclose(highscore_file);
         }
     }
 
-    void render(SDL_Rect infoRect, int screen_width) {
+    void render(SDL_Rect infoRect) {
         SDL_Rect info_viewport = infoRect;
-        info_viewport.x = screen_width / 2;
+        info_viewport.x = infoRect.w / 2;
         info_viewport.w /= 2;
         SDL_RenderSetViewport(gRenderer, &info_viewport);
         SDL_SetRenderDrawColor(gRenderer, 0x10, 0x10, 0x10, 0xff);
-        SDL_RenderFillRect(gRenderer, NULL);
+        SDL_RenderFillRect(gRenderer, nullptr);
 
         std::ostringstream score_stream;
         score_stream << "SCORE  " << std::setw(8) << std::setfill('0') << value;
-        gTextTexture.loadFromRenderedText(score_stream.str(), gFont,
-                                          {0xff, 0xff, 0xff});
+        gTextTexture.loadFromText(score_stream.str(), font, {0xff, 0xff, 0xff});
         gTextTexture.render(info_viewport.w - gTextTexture.getWidth(), 0);
 
         std::ostringstream highscore_stream;
         highscore_stream << "HIGH  " << std::setw(8) << std::setfill('0')
                          << highscore;
-        gTextTexture.loadFromRenderedText(highscore_stream.str(), gFont,
-                                          {0xff, 0xff, 0xff});
+        gTextTexture.loadFromText(highscore_stream.str(), font,
+                                  {0xff, 0xff, 0xff});
         gTextTexture.render(info_viewport.w - gTextTexture.getWidth(),
                             gTextTexture.getHeight());
     }

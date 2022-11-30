@@ -9,6 +9,7 @@ extern SDL_Renderer* gRenderer;
 extern std::string gResourcesPath;
 
 typedef enum { DEFAULT = -1, UP, RIGHT, DOWN, LEFT } Heading;
+
 enum BodyPart {
     HEAD,
     BODY_YELLOW,
@@ -24,19 +25,21 @@ class Snake {
     Texture gTextureWorm;
     std::list<coord> list;
     Heading heading;
+    const int gameWidth, gameHeight;
+
     void empty();
     BodyPart SelectTile(std::list<coord>::iterator iter, double* rotation,
                         int i);
     void addNode(coord node);
 
    public:
-    Snake();
+    Snake(int width, int height);
     bool advance(int game_width, int game_height);
     bool contains(coord item);
     coord getHead() { return list.front(); };
     Heading getHeading() { return heading; };
     void grow();
     void render();
-    void reset(int width, int height);
+    void reset();
     void turn(Heading heading);
 };

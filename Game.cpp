@@ -1,15 +1,34 @@
 #include "Game.hpp"
 
-#include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+
+#include "GameState.hpp"
+#include "PlayingState.hpp"
 
 extern SDL_Window* gWindow;
 extern SDL_Renderer* gRenderer;
 
+
+
 Game::Game(std::string name, const int width, const int height)
     : width(width), height(height) {
     if (!SDL_Init(name, width, height)) printf("SDL initialization error!");
+
+    changeState(PlayingState::instance());
+
+    Uint32 start_time = SDL_GetTicks();
+    while (mRunning) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) handleEvent(e);
+        if (!mRunning) break;
+        Uint32 curr_time = SDL_GetTicks();
+        if (curr_time - start_time > 130) {
+            update(curr_time - start_time);
+            start_time = curr_time;
+            render();
+        }
+    }
 }
 
 Game::~Game() {
@@ -60,4 +79,55 @@ bool Game::SDL_Init(std::string name, const int width, const int height) {
         }
     }
     return success;
+}
+
+void Game::changeState(GameState* state) {
+    // cleanup the current state
+    if (!mStates.empty()) {
+        mStates.back()->cleanup();
+        mStates.pop_back();
+    }
+
+    // store and init the new state
+    mStates.push_back(state);
+    mStates.back()->init(this);
+}
+
+void Game::pushState(GameState* state) {
+    // pause current state
+    if (!mStates.empty()) {
+        mStates.back()->pause();
+    }
+
+    // store and init the new state
+    mStates.push_back(state);
+    mStates.back()->init(this);
+}
+
+void Game::popState() {
+    // cleanup the current state
+    if (!mStates.empty()) {
+        mStates.back()->cleanup();
+        mStates.pop_back();
+    }
+
+    // resume previous state
+    if (!mStates.empty()) {
+        mStates.back()->resume();
+    }
+}
+
+void Game::handleEvent(SDL_Event e) {
+    // let the state handle events
+    mStates.back()->handleEvent(this, e);
+}
+
+void Game::update(Uint32 elapsedTime) {
+    // let the state update the game
+    mStates.back()->update(this, elapsedTime);
+}
+
+void Game::render() {
+    // let the state draw the screen
+    mStates.back()->render(this);
 }

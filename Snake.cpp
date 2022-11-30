@@ -1,6 +1,9 @@
 #include "Snake.hpp"
 
-Snake::Snake() { gTextureWorm.loadFromFile(gResourcesPath + "worm.png"); };
+Snake::Snake(int width, int height) : gameWidth(width), gameHeight(height) {
+    gTextureWorm.loadFromFile(gResourcesPath + "worm.png");
+    reset();
+};
 
 void Snake::empty() {
     while (!list.empty()) list.pop_back();
@@ -10,10 +13,10 @@ void Snake::addNode(coord node) { list.push_back(node); }
 
 void Snake::grow() { list.push_back(list.back()); };
 
-void Snake::reset(int width, int height) {
+void Snake::reset() {
     empty();
     for (int i = 0; i < 3; i++) {
-        addNode({width / 2, height / 2 + (i - 1) * 20});
+        addNode({gameWidth / 2, gameHeight / 2 + (i - 1) * 20});
     }
     heading = DEFAULT;
 }
@@ -100,7 +103,6 @@ bool Snake::advance(int game_width, int game_height) {
         default:
             break;
     }
-
     if (contains(new_head)) return false;
     list.pop_back();
     list.push_front(new_head);

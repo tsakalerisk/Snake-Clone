@@ -1,27 +1,16 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <stdio.h>
-#include <time.h>
+#include "Game.hpp"
 
-#include <iostream>
-#include <list>
-#include <queue>
-#include <string>
+//enum { START, MAIN_CHANGE_SKIN, MAIN_QUIT, N_MAIN_OPTIONS };
+//enum { CONTINUE, PAUSE_CHANGE_SKIN, PAUSE_QUIT, N_PAUSE_OPTIONS };
+//enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
 
-#include "SnakeGame.hpp"
-
-enum { START, MAIN_CHANGE_SKIN, MAIN_QUIT, N_MAIN_OPTIONS };
-enum { CONTINUE, PAUSE_CHANGE_SKIN, PAUSE_QUIT, N_PAUSE_OPTIONS };
-enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
-
-void MainMenu();
-void PauseMenu();
-void SkinMenu();
-void RenderMenu(SDL_Rect menu_rect, int nOptions, std::string* options,
-                int selection);
-void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
-bool SkinExists(int n);
+// void MainMenu();
+// void PauseMenu();
+// void SkinMenu();
+// void RenderMenu(SDL_Rect menu_rect, int nOptions, std::string* options,
+//                 int selection);
+// void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
+// bool SkinExists(int n);
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -29,16 +18,16 @@ const int SCREEN_HEIGHT = 480;
 std::string gResourcesPath = "..\\Resources\\";
 
 long gScore = 0, gHighScore;
-std::string gMain_Options[N_MAIN_OPTIONS] = {"START", "CHANGE  SKIN", "QUIT"};
-std::string gPause_Options[N_PAUSE_OPTIONS] = {"CONTINUE", "CHANGE  SKIN",
-                                               "QUIT"};
-std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
+//std::string gMain_Options[N_MAIN_OPTIONS] = {"START", "CHANGE  SKIN", "QUIT"};
+//std::string gPause_Options[N_PAUSE_OPTIONS] = {"CONTINUE", "CHANGE  SKIN",
+//                                               "QUIT"};
+//std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
 
 SDL_Window* gWindow;
 SDL_Renderer* gRenderer;
 
 int main(int argc, char* agrs[]) {
-    SnakeGame("Worm", SCREEN_WIDTH, SCREEN_HEIGHT);
+    Game("Worm", SCREEN_WIDTH, SCREEN_HEIGHT);
     return 0;
 }
 
