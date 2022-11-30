@@ -1,9 +1,7 @@
 #include "Game.hpp"
 
-//enum { START, MAIN_CHANGE_SKIN, MAIN_QUIT, N_MAIN_OPTIONS };
 //enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
 
-// void MainMenu();
 // void SkinMenu();
 // void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
 // bool SkinExists(int n);
@@ -13,8 +11,6 @@ const int SCREEN_HEIGHT = 480;
 
 std::string gResourcesPath = "..\\Resources\\";
 
-long gScore = 0, gHighScore;
-//std::string gMain_Options[N_MAIN_OPTIONS] = {"START", "CHANGE  SKIN", "QUIT"};
 //std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
 
 SDL_Window* gWindow;
@@ -24,70 +20,6 @@ int main(int argc, char* agrs[]) {
     Game("Worm", SCREEN_WIDTH, SCREEN_HEIGHT);
     return 0;
 }
-
-// void MainMenu() {
-//     SDL_Rect menu_rect;
-//     menu_rect.x = gGameRect.x;  // 0
-//     menu_rect.h = N_MAIN_OPTIONS * TTF_FontHeight(gFont) + 1;
-//     menu_rect.y = (gGameRect.h - menu_rect.h) / 2;
-//     menu_rect.w = gGameRect.w;
-//     int selection = 0;  // START
-//     RenderMenu(menu_rect, N_MAIN_OPTIONS, gMain_Options, selection);
-//     bool stop = false;
-//     while (!stop) {
-//         SDL_Event e;
-//         while (SDL_PollEvent(&e) != 0) {
-//             if (e.type == SDL_QUIT) {
-//                 stop = true;
-//                 close();
-//                 exit(0);
-//             } else if (e.type == SDL_KEYDOWN) {
-//                 switch (e.key.keysym.sym) {
-//                     case SDLK_UP:
-//                         if (selection > 0) selection--;
-//                         RenderMenu(menu_rect, N_MAIN_OPTIONS, gMain_Options,
-//                                    selection);
-//                         break;
-//                     case SDLK_DOWN:
-//                         if (selection < N_MAIN_OPTIONS - 1) selection++;
-//                         RenderMenu(menu_rect, N_MAIN_OPTIONS, gMain_Options,
-//                                    selection);
-//                         break;
-//                     case SDLK_SPACE:
-//                     case SDLK_RETURN:  // enter
-//                         switch (selection) {
-//                             case START:
-//                                 stop = true;
-//                                 break;
-//                             case MAIN_CHANGE_SKIN: {
-//                                 SDL_Surface* temp_surface =
-//                                     SDL_CreateRGBSurface(0, SCREEN_WIDTH,
-//                                                          SCREEN_HEIGHT, 32,
-//                                                          0, 0, 0, 0);
-//                                 SDL_RenderReadPixels(gRenderer, NULL, 0,
-//                                                      temp_surface->pixels,
-//                                                      temp_surface->pitch);
-//                                 SDL_Texture* temp_texture =
-//                                     SDL_CreateTextureFromSurface(gRenderer,
-//                                                                  temp_surface);
-//                                 SkinMenu();
-//                                 SDL_RenderCopy(gRenderer, temp_texture, NULL,
-//                                                NULL);
-//                                 SDL_RenderPresent(gRenderer);
-//                                 SDL_DestroyTexture(temp_texture);
-//                                 SDL_FreeSurface(temp_surface);
-//                             } break;
-//                             case MAIN_QUIT:
-//                                 stop = true;
-//                                 close();
-//                                 exit(0);
-//                         }
-//                         break;
-//                 }
-//             }
-//         }
-//     }
-// }
 
 // void SkinMenu() {
 //     SDL_Rect menu_rect;
