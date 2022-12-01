@@ -8,7 +8,7 @@ class GameState;
 
 class Game {
    private:
-    bool SDL_Init(std::string name, int width, int height);
+    bool SDL_Init(const std::string& name, int width, int height);
     bool mRunning = true;
     std::vector<GameState*> mStates;
 
@@ -18,7 +18,7 @@ class Game {
     const SDL_Rect gGameRect = {0, 0, width, game_height};
     const SDL_Rect gInfoRect = {0, game_height, width, info_height};
 
-    Game(std::string name, int width, int height);
+    Game(const std::string& name, int width, int height);
     ~Game();
 
     void quit() { mRunning = false; }

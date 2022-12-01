@@ -21,7 +21,7 @@ class MenuState : public GameState {
     void render(Game* game) override;
 
    protected:
-    MenuState(const vector<string> options) : options(options) {}
+    explicit MenuState(const vector<string>& options) : options(options) {}
 
     const vector<string> options;
     vector<string>::const_iterator iter;
@@ -31,6 +31,6 @@ class MenuState : public GameState {
     virtual void select(Game* game) = 0;
 
     Texture mTextTexture;
-    SDL_Rect mMenuRect;
+    SDL_Rect mMenuRect{};
     Font mFont = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 };

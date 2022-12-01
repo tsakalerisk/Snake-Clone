@@ -5,7 +5,6 @@
 #include "MenuState.hpp"
 #include "Texture.hpp"
 
-extern std::string gResourcesPath;
 using namespace std;
 
 class MainMenuState : public MenuState {
@@ -16,7 +15,7 @@ class MainMenuState : public MenuState {
     }
 
    private:
-    MainMenuState() : MenuState({"START", "CHANGE  SKIN","QUIT"}) {}
+    MainMenuState() : MenuState({"START", "CHANGE  SKIN", "QUIT"}) {}
     enum OptionsEnum { START, CHANGE_SKIN, QUIT };
 
     void select(Game* game) override;

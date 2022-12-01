@@ -32,7 +32,7 @@ class Score {
     static long GetHighScore() {
         FILE* highscore_file = fopen("highscore.worm", "rb");
         long highscore = 0;
-        if (highscore_file != NULL) {
+        if (highscore_file != nullptr) {
             fread(&highscore, sizeof(long), 1, highscore_file);
             fclose(highscore_file);
         }
@@ -61,11 +61,8 @@ class Score {
         gTextTexture.render(info_viewport.w - gTextTexture.getWidth(), 0);
 
         std::ostringstream highscore_stream;
-        highscore_stream << "HIGH  " << std::setw(8) << std::setfill('0')
-                         << highscore;
-        gTextTexture.loadFromText(highscore_stream.str(), font,
-                                  {0xff, 0xff, 0xff});
-        gTextTexture.render(info_viewport.w - gTextTexture.getWidth(),
-                            gTextTexture.getHeight());
+        highscore_stream << "HIGH  " << std::setw(8) << std::setfill('0') << highscore;
+        gTextTexture.loadFromText(highscore_stream.str(), font, {0xff, 0xff, 0xff});
+        gTextTexture.render(info_viewport.w - gTextTexture.getWidth(), gTextTexture.getHeight());
     }
 };

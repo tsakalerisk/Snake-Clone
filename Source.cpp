@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-//enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
+// enum { SKIN_NUMBER, BACK, N_SKIN_OPTIONS };
 
 // void SkinMenu();
 // void RenderSkinPreview(SDL_Rect preview_rect, int skin_previewed);
@@ -11,7 +11,7 @@ const int SCREEN_HEIGHT = 480;
 
 std::string gResourcesPath = "..\\Resources\\";
 
-//std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
+// std::string gSkin_Options[N_SKIN_OPTIONS] = {"000", "BACK"};
 
 SDL_Window* gWindow;
 SDL_Renderer* gRenderer;

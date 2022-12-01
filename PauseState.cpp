@@ -7,7 +7,7 @@ void PauseState::select(Game* game) {
             game->popState();
             break;
         case CHANGE_SKIN: {
-            // TODO
+            // TODO:
             //  SDL_Surface* temp_surface = SDL_CreateRGBSurface(
             //      0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
             //  SDL_RenderReadPixels(gRenderer, NULL, 0, temp_surface->pixels,

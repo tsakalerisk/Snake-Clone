@@ -14,6 +14,8 @@ class PlayingState : public GameState {
         return &an_istance;
     }
 
+    PlayingState();
+
     void init(Game* game) override;
     void cleanup() override{};
 
@@ -24,8 +26,6 @@ class PlayingState : public GameState {
     void update(Game* game, Uint32 elapsed_time) override;
     void render(Game* game) override;
 
-    bool loadMedia();
-    
     Texture gTextureBackground;
     Texture gTextureApple;
     Texture gTextureWorm;
@@ -33,7 +33,6 @@ class PlayingState : public GameState {
     Font mFontNormal = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 
     Snake* snake = nullptr;
-    coord fruit;
+    coord fruit{};
     Score score;
-
 };

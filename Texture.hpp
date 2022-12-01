@@ -19,10 +19,10 @@ class Texture {
     ~Texture();
 
     // Loads image at specified path
-    bool loadFromFile(std::string path);
+    bool loadFromFile(const std::string& path);
 
     // Creates image from font string
-    bool loadFromText(std::string textureText, Font& font, SDL_Color textColor);
+    bool loadFromText(const std::string& textureText, Font& font, SDL_Color textColor);
 
     // Deallocates texture
     void free();
@@ -36,17 +36,15 @@ class Texture {
     // Set alpha modulation
     void setAlpha(Uint8 alpha);
 
-    void render(SDL_Rect renderQuad, SDL_Rect* clip = NULL, double angle = 0.0,
-                SDL_Point* center = NULL,
-                SDL_RendererFlip flip = SDL_FLIP_NONE);
+    void render(SDL_Rect renderQuad, SDL_Rect* clip = nullptr, double angle = 0.0,
+                SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
     // Renders texture at given point
-    void render(int x = 0, int y = 0, SDL_Rect* clip = NULL, double angle = 0.0,
-                SDL_Point* center = NULL,
-                SDL_RendererFlip flip = SDL_FLIP_NONE);
+    void render(int x = 0, int y = 0, SDL_Rect* clip = nullptr, double angle = 0.0,
+                SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
     // Gets image dimensions
-    int getWidth();
-    int getHeight();
+    int getWidth() const;
+    int getHeight() const;
 
    private:
     // The actual hardware texture

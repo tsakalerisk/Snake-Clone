@@ -1,5 +1,7 @@
 #include "Snake.hpp"
 
+#include <algorithm>
+
 Snake::Snake(int width, int height) : gameWidth(width), gameHeight(height) {
     gTextureWorm.loadFromFile(gResourcesPath + "worm.png");
     reset();
@@ -30,7 +32,7 @@ bool Snake::contains(coord item) {
 
 void Snake::render() {
     int i = 0;
-    for (std::list<coord>::iterator it = list.begin(); it != list.end(); it++) {
+    for (auto it = list.begin(); it != list.end(); it++) {
         double rotation;
         int tile = SelectTile(it, &rotation, i);
         SDL_Rect clip = {20 * tile, 0, 20, 20};
@@ -39,13 +41,12 @@ void Snake::render() {
     }
 }
 
-BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation,
-                           int i) {
+BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation, int i) {
     if (*iter == *(list.begin())) {
         *rotation = heading == DEFAULT ? 0 : heading * 90;
         return HEAD;
     } else if (*iter == *(std::prev(list.end()))) {
-        std::list<coord>::iterator prev = std::prev(iter);
+        auto prev = std::prev(iter);
         if (prev->x == iter->x) {  // up or down
             *rotation = 180 * (prev->y == iter->y + 20);
         } else {  // left or right
@@ -53,8 +54,8 @@ BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation,
         }
         return i % 2 == 0 ? TAIL_BLACK : TAIL_YELLOW;
     } else {
-        std::list<coord>::iterator pred = std::prev(iter);
-        std::list<coord>::iterator next = std::next(iter);
+        auto pred = std::prev(iter);
+        auto next = std::next(iter);
 
         // vertical or horizontal line
         if (pred->x == next->x || pred->y == next->y) {
@@ -62,11 +63,9 @@ BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation,
             return i % 2 == 0 ? BODY_BLACK : BODY_YELLOW;
         } else {
             if (pred->y == iter->y - 20 || next->y == iter->y - 20) {  // J or L
-                *rotation =
-                    90 * !(pred->x == iter->x - 20 || next->x == iter->x - 20);
+                *rotation = 90 * !(pred->x == iter->x - 20 || next->x == iter->x - 20);
             } else {  // gamma or mirror gamma
-                *rotation = 180 + 90 * (pred->x == iter->x - 20 ||
-                                        next->x == iter->x - 20);
+                *rotation = 180 + 90 * (pred->x == iter->x - 20 || next->x == iter->x - 20);
             }
             return i % 2 == 0 ? CORNER_BLACK : CORNER_YELLOW;
         }
@@ -109,26 +108,26 @@ bool Snake::advance(int game_width, int game_height) {
     return true;
 }
 
-void Snake::turn(Heading heading) {
-    switch (heading) {
+void Snake::turn(Heading direction) {
+    switch (direction) {
         case UP:
-            if (this->heading != DOWN) {
-                this->heading = UP;
+            if (heading != DOWN) {
+                heading = UP;
             }
             break;
         case DOWN:
-            if (this->heading != UP && this->heading != DEFAULT) {
-                this->heading = DOWN;
+            if (heading != UP && heading != DEFAULT) {
+                heading = DOWN;
             }
             break;
         case LEFT:
-            if (this->heading != RIGHT) {
-                this->heading = LEFT;
+            if (heading != RIGHT) {
+                heading = LEFT;
             }
             break;
         case RIGHT:
-            if (this->heading != LEFT) {
-                this->heading = RIGHT;
+            if (heading != LEFT) {
+                heading = RIGHT;
             }
             break;
         default:

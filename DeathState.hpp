@@ -12,6 +12,8 @@ class DeathState : public GameState {
         return &an_istance;
     }
 
+    DeathState();
+
     void init(Game* game) override;
     void cleanup() override;
 
@@ -23,7 +25,12 @@ class DeathState : public GameState {
     void render(Game* game) override;
 
    private:
-    Texture mHeaderTexture, mSubtitleTexture;
-    Font mFontLarge = Font(gResourcesPath + "ARCADECLASSIC.TTF", 48);
-    Font mFontNormal = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
+    const int outline = 1;
+    const std::string mFontName = "ARCADECLASSIC.TTF";
+
+    Texture mHeaderTexture, mHeaderTextureOutline, mSubtitleTexture, mSubtitleTextureOutline;
+    Font mFontLarge = Font(gResourcesPath + mFontName, 48);
+    Font mFontLargeOutline = Font(gResourcesPath + mFontName, 48);
+    Font mFontNormal = Font(gResourcesPath + mFontName, 20);
+    Font mFontNormalOutline = Font(gResourcesPath + mFontName, 20);
 };

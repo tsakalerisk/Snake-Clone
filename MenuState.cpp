@@ -39,7 +39,6 @@ void MenuState::render(Game* game) {
     SDL_SetRenderDrawColor(gRenderer, 0x10, 0x10, 0x10, 0xff);
     SDL_RenderFillRect(gRenderer, &mMenuRect);
 
-    int text_w, text_h;
     for (int i = 0; i < options.size(); i++) {
         mTextTexture.loadFromText(options[i], mFont, {0xff, 0xff, 0xff});
         SDL_Rect text_rect;
@@ -50,13 +49,10 @@ void MenuState::render(Game* game) {
         mTextTexture.render(text_rect);
         if (i == getSelection()) {
             SDL_SetRenderDrawColor(gRenderer, 0x88, 0, 0, 0xff);
-            SDL_RenderDrawLine(gRenderer, mMenuRect.x, text_rect.y,
-                               mMenuRect.x + mMenuRect.w, text_rect.y);
-            SDL_RenderDrawLine(
-                gRenderer, mMenuRect.x, text_rect.y + text_rect.h,
-                mMenuRect.x + mMenuRect.w, text_rect.y + text_rect.h);
+            SDL_RenderDrawLine(gRenderer, mMenuRect.x, text_rect.y, mMenuRect.x + mMenuRect.w,
+                               text_rect.y);
+            SDL_RenderDrawLine(gRenderer, mMenuRect.x, text_rect.y + text_rect.h,
+                               mMenuRect.x + mMenuRect.w, text_rect.y + text_rect.h);
         }
     }
-
-    SDL_RenderPresent(gRenderer);
 }

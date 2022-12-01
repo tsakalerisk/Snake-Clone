@@ -5,7 +5,6 @@
 #include "Texture.hpp"
 #include "coord.hpp"
 
-extern SDL_Renderer* gRenderer;
 extern std::string gResourcesPath;
 
 typedef enum { DEFAULT = -1, UP, RIGHT, DOWN, LEFT } Heading;
@@ -28,8 +27,7 @@ class Snake {
     const int gameWidth, gameHeight;
 
     void empty();
-    BodyPart SelectTile(std::list<coord>::iterator iter, double* rotation,
-                        int i);
+    BodyPart SelectTile(std::list<coord>::iterator iter, double* rotation, int i);
     void addNode(coord node);
 
    public:
@@ -41,5 +39,5 @@ class Snake {
     void grow();
     void render();
     void reset();
-    void turn(Heading heading);
+    void turn(Heading direction);
 };
