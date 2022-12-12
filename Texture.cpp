@@ -44,31 +44,50 @@ bool Texture::loadFromFile(const std::string& path) {
     return mTexture != nullptr;
 }
 
-bool Texture::loadFromText(const std::string& textureText, Font& font, SDL_Color textColor) {
+bool Texture::loadFromText(const std::string& textureText, Font& font, SDL_Color textColor,
+                           int outline, SDL_Color outlineColor) {
     // Get rid of preexisting texture
     free();
 
     // Render text surface
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font.getFont(), textureText.c_str(), textColor);
-    if (textSurface == nullptr) {
-        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-    } else {
-        // Create texture from surface pixels
-        mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
-        if (mTexture == nullptr) {
-            printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-        } else {
-            // Get image dimensions
-            mWidth = textSurface->w;
-            mHeight = textSurface->h;
-        }
+    SDL_Surface* textSurface =
+        TTF_RenderText_Blended(font.getFont(), textureText.c_str(), textColor);
 
-        // Get rid of old surface
+    if (outline > 0) {
+        TTF_SetFontOutline(font.getFont(), outline);
+        SDL_Surface* outlineSurface =
+            TTF_RenderText_Blended(font.getFont(), textureText.c_str(), outlineColor);
+        TTF_SetFontOutline(font.getFont(), 0);
+
+        SDL_Rect textRect = {outline, outline, textSurface->w, textSurface->h};
+        SDL_BlitSurface(textSurface, nullptr, outlineSurface, &textRect);
         SDL_FreeSurface(textSurface);
+        textSurface = outlineSurface;
     }
 
+    if (textSurface == nullptr) {
+        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+        return false;
+    }
+
+    // Create texture from surface pixels
+    mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+    if (mTexture == nullptr) {
+        printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+
+    // Get image dimensions
+    mWidth = textSurface->w;
+    mHeight = textSurface->h;
+
+    // Get rid of old surface
+    SDL_FreeSurface(textSurface);
+
+    mOutline = outline;
+
     // Return success
-    return mTexture != nullptr;
+    return true;
 }
 
 void Texture::free() {
@@ -114,6 +133,15 @@ void Texture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cent
     // Set rendering space and render to screen
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
     render(renderQuad, clip, angle, center, flip);
+}
+
+SDL_Rect Texture::renderCentered(SDL_Rect container, int centerAxis, int otherDimension,
+                                 SDL_Rect* clip, double angle, SDL_Point* center,
+                                 SDL_RendererFlip flip) {
+    int x = centerAxis & CENTER_HORIZONTAL ? (container.w - mWidth) / 2 : otherDimension;
+    int y = centerAxis & CENTER_VERTICAL ? (container.h - mHeight) / 2 : otherDimension;
+    render(x, y, clip, angle, center, flip);
+    return {x, y, mWidth, mHeight};
 }
 
 int Texture::getWidth() const { return mWidth; }

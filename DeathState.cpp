@@ -2,17 +2,10 @@
 
 #include "PlayingState.hpp"
 
-DeathState::DeathState() {
-    TTF_SetFontOutline(mFontLargeOutline.getFont(), outline);
-    TTF_SetFontOutline(mFontNormalOutline.getFont(), outline);
-}
-
 void DeathState::init(Game* game) {
     std::string title = "YOU  DIED", subtitle = "PRESS  SPACE  TO  CONTINUE";
-    mHeaderTexture.loadFromText(title, mFontLarge, {0xff, 0xff, 0xff});
-    mHeaderTextureOutline.loadFromText(title, mFontLargeOutline, {0x00, 0x00, 0x00});
-    mSubtitleTexture.loadFromText(subtitle, mFontNormal, {0xff, 0xff, 0xff});
-    mSubtitleTextureOutline.loadFromText(subtitle, mFontNormalOutline, {0x00, 0x00, 0x00});
+    mHeaderTexture.loadFromText(title, mFontLarge, {0xff, 0xff, 0xff}, 1);
+    mSubtitleTexture.loadFromText(subtitle, mFontNormal, {0xff, 0xff, 0xff}, 1);
 }
 
 void DeathState::cleanup() {}
@@ -33,27 +26,9 @@ void DeathState::handleEvent(Game* game, SDL_Event e) {
 
 void DeathState::update(Game* game, Uint32 elapsed_time) {}
 
-// TODO: remove
-SDL_Rect center(SDL_Rect container, Texture& texture);
-
-// TODO: improve
 void DeathState::render(Game* game) {
-    SDL_Rect title_rect = center(game->gGameRect, mHeaderTextureOutline);
-    mHeaderTextureOutline.render(title_rect);
-    mHeaderTexture.render(title_rect.x + outline, title_rect.y + outline);
+    SDL_Rect header =
+        mHeaderTexture.renderCentered(game->gGameRect, CENTER_HORIZONTAL | CENTER_VERTICAL);
 
-    mSubtitleTextureOutline.render((game->width - mSubtitleTextureOutline.getWidth()) / 2,
-                                   title_rect.y + title_rect.h);
-    mSubtitleTexture.render((game->width - mSubtitleTexture.getWidth()) / 2,
-                            title_rect.y + title_rect.h + outline);
-}
-
-// TODO: remove
-SDL_Rect center(SDL_Rect container, Texture& texture) {
-    SDL_Rect rect;
-    rect.x = (container.w - texture.getWidth()) / 2;
-    rect.y = (container.h - texture.getHeight()) / 2;
-    rect.w = texture.getWidth();
-    rect.h = texture.getHeight();
-    return rect;
+    mSubtitleTexture.renderCentered(game->gGameRect, CENTER_HORIZONTAL, header.y + header.h);
 }

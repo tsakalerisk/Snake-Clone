@@ -10,6 +10,8 @@
 
 extern SDL_Renderer* gRenderer;
 
+enum { CENTER_VERTICAL = 1, CENTER_HORIZONTAL = 2 };  // powers of two
+
 class Texture {
    public:
     // Initializes variables
@@ -22,7 +24,8 @@ class Texture {
     bool loadFromFile(const std::string& path);
 
     // Creates image from font string
-    bool loadFromText(const std::string& textureText, Font& font, SDL_Color textColor);
+    bool loadFromText(const std::string& textureText, Font& font, SDL_Color textColor,
+                      int outline = 0, SDL_Color outlineColor = {0, 0, 0});
 
     // Deallocates texture
     void free();
@@ -41,6 +44,9 @@ class Texture {
     // Renders texture at given point
     void render(int x = 0, int y = 0, SDL_Rect* clip = nullptr, double angle = 0.0,
                 SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+    SDL_Rect renderCentered(SDL_Rect container, int centerAxis, int otherDimension = -1,
+                            SDL_Rect* clip = nullptr, double angle = 0.0,
+                            SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
     // Gets image dimensions
     int getWidth() const;
@@ -53,4 +59,7 @@ class Texture {
     // Image dimensions
     int mWidth;
     int mHeight;
+
+    // Text outline
+    int mOutline = 0;
 };
