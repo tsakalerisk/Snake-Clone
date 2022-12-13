@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL.h>
 
 #include <list>
@@ -21,17 +23,18 @@ enum BodyPart {
 
 class Snake {
    private:
-    Texture gTextureWorm;
+    Texture mTextureWorm;
     std::list<coord> list;
     Heading heading;
-    const int gameWidth, gameHeight;
+    int gameWidth, gameHeight;
 
     void empty();
     BodyPart SelectTile(std::list<coord>::iterator iter, double* rotation, int i);
     void addNode(coord node);
 
    public:
-    Snake(int width, int height);
+    Snake(std::string skin);
+    void init(int width, int height);
     bool advance(int game_width, int game_height);
     bool contains(coord item);
     coord getHead() { return list.front(); };
@@ -40,4 +43,5 @@ class Snake {
     void render();
     void reset();
     void turn(Heading direction);
+    void changeSkin(std::string path);
 };

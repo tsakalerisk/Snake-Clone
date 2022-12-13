@@ -2,10 +2,13 @@
 
 #include <algorithm>
 
-Snake::Snake(int width, int height) : gameWidth(width), gameHeight(height) {
-    gTextureWorm.loadFromFile(gResourcesPath + "worm.png");
+Snake::Snake(std::string skin) { mTextureWorm.loadFromFile(skin); };
+
+void Snake::init(int width, int height) {
+    gameWidth = width;
+    gameHeight = height;
     reset();
-};
+}
 
 void Snake::empty() {
     while (!list.empty()) list.pop_back();
@@ -36,7 +39,7 @@ void Snake::render() {
         double rotation;
         int tile = SelectTile(it, &rotation, i);
         SDL_Rect clip = {20 * tile, 0, 20, 20};
-        gTextureWorm.render(it->x, it->y, &clip, rotation);
+        mTextureWorm.render(it->x, it->y, &clip, rotation);
         i++;
     }
 }
@@ -133,4 +136,8 @@ void Snake::turn(Heading direction) {
         default:
             break;
     }
+}
+
+void Snake::changeSkin(std::string path) {
+    mTextureWorm.loadFromFile(path);
 }

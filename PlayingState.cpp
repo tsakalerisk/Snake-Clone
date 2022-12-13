@@ -8,18 +8,18 @@
 #include "Game.hpp"
 #include "PauseState.hpp"
 
-PlayingState::PlayingState() {
+PlayingState::PlayingState() : snake(gResourcesPath + "worm.png") {
     gTextureBackground.loadFromFile(gResourcesPath + "ground.png");
     gTextureApple.loadFromFile(gResourcesPath + "apple.png");
 }
 
 void PlayingState::init(Game* game) {
     score.reset();
-    snake = new Snake(game->width, game->game_height);
+    snake.init(game->width, game->game_height);
     do {
         fruit.x = rand() % (game->width / 20) * 20;
         fruit.y = rand() % (game->game_height / 20) * 20;
-    } while (snake->contains(fruit));
+    } while (snake.contains(fruit));
     SDL_SetRenderDrawColor(gRenderer, 0x10, 0x10, 0x10, 0xff);
     SDL_RenderFillRect(gRenderer, &game->gInfoRect);
     std::string text = "PRESS  ESC  TO  PAUSE";
@@ -33,19 +33,19 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
     } else if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
             case SDLK_UP:
-                snake->turn(UP);
+                snake.turn(UP);
                 break;
             case SDLK_DOWN:
-                snake->turn(DOWN);
+                snake.turn(DOWN);
                 break;
             case SDLK_LEFT:
-                snake->turn(LEFT);
+                snake.turn(LEFT);
                 break;
             case SDLK_RIGHT:
-                snake->turn(RIGHT);
+                snake.turn(RIGHT);
                 break;
             case SDLK_SPACE:
-                snake->grow();
+                snake.grow();
                 break;
             case SDLK_ESCAPE:
                 game->pushState(PauseState::instance());
@@ -55,20 +55,20 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
 }
 
 void PlayingState::update(Game* game, Uint32 elapsed_time) {
-    if (snake->getHeading() != DEFAULT) {
-        if (!snake->advance(game->width, game->game_height)) {
+    if (snake.getHeading() != DEFAULT) {
+        if (!snake.advance(game->width, game->game_height)) {
             game->pushState(DeathState::instance());
-            // snake->reset();
+            // snake.reset();
             // score.reset();
             return;
         } else {
-            if (snake->getHead() == fruit) {
-                snake->grow();
+            if (snake.getHead() == fruit) {
+                snake.grow();
                 score.add(5);
                 do {
                     fruit.x = rand() % (game->width / 20) * 20;
                     fruit.y = rand() % (game->game_height / 20) * 20;
-                } while (snake->contains(fruit));
+                } while (snake.contains(fruit));
             }
         }
     }
@@ -78,7 +78,7 @@ void PlayingState::render(Game* game) {
     SDL_RenderSetViewport(gRenderer, nullptr);
     gTextureBackground.render(game->gGameRect);
 
-    snake->render();
+    snake.render();
 
     gTextureApple.render({fruit.x, fruit.y, 20, 20});
 

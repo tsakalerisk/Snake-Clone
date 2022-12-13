@@ -23,7 +23,7 @@ class MenuState : public GameState {
    protected:
     explicit MenuState(const vector<string>& options) : options(options) {}
 
-    const vector<string> options;
+    vector<string> options;
     vector<string>::const_iterator iter;
     inline int getSelection() { return iter - options.begin(); };
     inline void setSelection(int x) { iter = options.begin() + x; };

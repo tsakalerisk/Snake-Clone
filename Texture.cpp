@@ -7,6 +7,10 @@ Texture::Texture() {
     mHeight = 0;
 }
 
+Texture::Texture(const std::string& path) : Texture() {
+    loadFromFile(path);
+}
+
 Texture::~Texture() {
     // Deallocate
     free();

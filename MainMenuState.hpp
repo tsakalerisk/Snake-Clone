@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "MenuState.hpp"
+#include "SkinMenuState.hpp"
 #include "Texture.hpp"
 
 using namespace std;

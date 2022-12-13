@@ -16,6 +16,7 @@ add_executable(Snake
     PauseState.cpp PauseState.hpp
     PlayingState.cpp PlayingState.hpp
     Score.hpp
+    SkinMenuState.cpp SkinMenuState.hpp
     Snake.cpp Snake.hpp
     Source.cpp
     Texture.cpp Texture.hpp)

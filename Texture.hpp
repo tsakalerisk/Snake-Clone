@@ -17,6 +17,11 @@ class Texture {
     // Initializes variables
     Texture();
 
+    Texture(const std::string& path);
+
+    Texture& operator=(const Texture&) = delete;
+    Texture(const Texture&) = delete;
+    
     // Deallocates memory
     ~Texture();
 
