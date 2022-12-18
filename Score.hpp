@@ -24,8 +24,11 @@ class Score {
         if ((value += amount) > highscore) highscore = value;
     }
 
-    void reset() {
+    void writeHighScore() {
         if (value > GetHighScore()) SetHighScore(value);
+    }
+
+    void reset() {
         value = 0;
     }
 

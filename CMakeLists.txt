@@ -25,3 +25,8 @@ target_include_directories(Snake PUBLIC D:/Konstantinos/Programming/libraries/in
 target_link_directories(Snake PUBLIC D:/Konstantinos/Programming/libraries/lib)
 
 target_link_libraries(Snake SDL2main SDL2 SDL2_image SDL2_ttf)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set_property(TARGET Snake PROPERTY WIN32_EXECUTABLE true)
+  set_target_properties(Snake PROPERTIES OUTPUT_NAME "Snake-release")
+endif()

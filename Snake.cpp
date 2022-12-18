@@ -50,6 +50,11 @@ BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation, in
         return HEAD;
     } else if (*iter == *(std::prev(list.end()))) {
         auto prev = std::prev(iter);
+
+        // hack to figure out orientation when two tails are on top
+        // of each other when the worm grows
+        if (*prev == *iter) prev--;
+
         if (prev->x == iter->x) {  // up or down
             *rotation = 180 * (prev->y == iter->y + 20);
         } else {  // left or right
@@ -138,6 +143,4 @@ void Snake::turn(Heading direction) {
     }
 }
 
-void Snake::changeSkin(std::string path) {
-    mTextureWorm.loadFromFile(path);
-}
+void Snake::changeSkin(std::string path) { mTextureWorm.loadFromFile(path); }

@@ -57,9 +57,8 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
 void PlayingState::update(Game* game, Uint32 elapsed_time) {
     if (snake.getHeading() != DEFAULT) {
         if (!snake.advance(game->width, game->game_height)) {
+            score.writeHighScore();
             game->pushState(DeathState::instance());
-            // snake.reset();
-            // score.reset();
             return;
         } else {
             if (snake.getHead() == fruit) {
