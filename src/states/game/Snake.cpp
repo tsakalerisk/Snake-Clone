@@ -116,24 +116,24 @@ bool Snake::advance(int game_width, int game_height) {
     return true;
 }
 
-void Snake::turn(Heading direction) {
+void Snake::turn(SDL_Keycode direction) {
     switch (direction) {
-        case UP:
+        case SDLK_UP:
             if (heading != DOWN) {
                 heading = UP;
             }
             break;
-        case DOWN:
+        case SDLK_DOWN:
             if (heading != UP && heading != DEFAULT) {
                 heading = DOWN;
             }
             break;
-        case LEFT:
+        case SDLK_LEFT:
             if (heading != RIGHT) {
                 heading = LEFT;
             }
             break;
-        case RIGHT:
+        case SDLK_RIGHT:
             if (heading != LEFT) {
                 heading = RIGHT;
             }

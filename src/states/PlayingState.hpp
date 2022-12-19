@@ -1,12 +1,12 @@
 #pragma once
 
+#include "../Game.hpp"
 #include "../utils/Font.hpp"
+#include "../utils/Texture.hpp"
 #include "GameState.hpp"
+#include "game/Coord.hpp"
 #include "game/Score.hpp"
 #include "game/Snake.hpp"
-#include "../utils/Texture.hpp"
-#include "game/Coord.hpp"
-#include "../Game.hpp"
 
 class PlayingState : public GameState {
    public:
@@ -29,13 +29,14 @@ class PlayingState : public GameState {
 
     void changeSnakeSkin(std::string path) { snake.changeSkin(path); }
 
+   private:
     Texture gTextureBackground;
     Texture gTextureApple;
-    Texture gTextureWorm;
     Texture gTextTexture;
     Font mFontNormal = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 
     Snake snake;
-    coord fruit{};
+    coord fruit;
     Score score;
+    bool mMovedThisTurn = false;
 };

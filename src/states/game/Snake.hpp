@@ -42,6 +42,6 @@ class Snake {
     void grow();
     void render();
     void reset();
-    void turn(Heading direction);
+    void turn(SDL_Keycode direction);
     void changeSkin(std::string path);
 };

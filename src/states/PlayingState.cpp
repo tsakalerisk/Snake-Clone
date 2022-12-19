@@ -4,8 +4,8 @@
 
 #include <ctime>
 
-#include "DeathState.hpp"
 #include "../Game.hpp"
+#include "DeathState.hpp"
 #include "menu-states/PauseState.hpp"
 
 PlayingState::PlayingState() : snake(gResourcesPath + "worm.png") {
@@ -33,16 +33,13 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
     } else if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
             case SDLK_UP:
-                snake.turn(UP);
-                break;
             case SDLK_DOWN:
-                snake.turn(DOWN);
-                break;
             case SDLK_LEFT:
-                snake.turn(LEFT);
-                break;
             case SDLK_RIGHT:
-                snake.turn(RIGHT);
+                if (!mMovedThisTurn) {
+                    snake.turn(e.key.keysym.sym);
+                    mMovedThisTurn = true;
+                }
                 break;
             case SDLK_SPACE:
                 snake.grow();
@@ -55,6 +52,7 @@ void PlayingState::handleEvent(Game* game, SDL_Event e) {
 }
 
 void PlayingState::update(Game* game, Uint32 elapsed_time) {
+    mMovedThisTurn = false;
     if (snake.getHeading() != DEFAULT) {
         if (!snake.advance(game->width, game->game_height)) {
             score.writeHighScore();
