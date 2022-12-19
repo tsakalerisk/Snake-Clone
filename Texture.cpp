@@ -1,4 +1,5 @@
 #include "Texture.hpp"
+#include "Game.hpp"
 
 Texture::Texture() {
     // Initialize

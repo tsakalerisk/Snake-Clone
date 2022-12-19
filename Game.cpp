@@ -9,12 +9,21 @@
 
 extern SDL_Window* gWindow;
 
+std::string gResourcesPath;
+std::string gBasePath;
+SDL_Window* gWindow;
+SDL_Renderer* gRenderer;
+
 Game::Game(const std::string& name, const int width, const int height)
     : width(width), height(height) {
     if (!SDL_Init(name, width, height)) printf("SDL initialization error!");
 
+    char *basePath = SDL_GetBasePath();
+    gBasePath = basePath;
+    gResourcesPath = gBasePath + "..\\Resources\\";
+    SDL_free(basePath);
+
     pushState(PlayingState::instance());
-    // render();
     pushState(MainMenuState::instance());
 
     srand((int)time(nullptr));

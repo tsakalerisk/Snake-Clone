@@ -6,6 +6,7 @@
 #include "Snake.hpp"
 #include "Texture.hpp"
 #include "coord.hpp"
+#include "Game.hpp"
 
 class PlayingState : public GameState {
    public:

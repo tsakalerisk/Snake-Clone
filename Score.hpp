@@ -1,10 +1,14 @@
+#pragma once
+
 #include <cstdio>
 #include <iomanip>
 #include <sstream>
 
 #include "Texture.hpp"
+#include "Game.hpp"
 
 extern std::string gResourcesPath;
+extern std::string gBasePath;
 
 class Score {
    private:
@@ -33,7 +37,7 @@ class Score {
     }
 
     static long GetHighScore() {
-        FILE* highscore_file = fopen("highscore.worm", "rb");
+        FILE* highscore_file = fopen((gBasePath + "highscore.worm").c_str(), "rb");
         long highscore = 0;
         if (highscore_file != nullptr) {
             fread(&highscore, sizeof(long), 1, highscore_file);
@@ -43,7 +47,7 @@ class Score {
     }
 
     static void SetHighScore(long highscore) {
-        FILE* highscore_file = fopen("highscore.worm", "wb");
+        FILE* highscore_file = fopen((gBasePath + "highscore.worm").c_str(), "wb");
         if (highscore_file != nullptr) {
             fwrite(&highscore, sizeof(long), 1, highscore_file);
             fclose(highscore_file);

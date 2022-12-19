@@ -1,4 +1,5 @@
 #include "MenuState.hpp"
+#include "Game.hpp"
 
 void MenuState::init(Game* game) {
     mMenuRect.x = game->gGameRect.x;
