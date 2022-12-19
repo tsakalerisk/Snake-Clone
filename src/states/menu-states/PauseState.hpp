@@ -4,7 +4,7 @@
 
 #include "MenuState.hpp"
 #include "SkinMenuState.hpp"
-#include "Texture.hpp"
+#include "../../utils/Texture.hpp"
 
 using namespace std;
 

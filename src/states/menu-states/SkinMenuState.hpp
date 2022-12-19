@@ -1,8 +1,8 @@
 #pragma once
 
 #include "MenuState.hpp"
-#include "PlayingState.hpp"
-#include "Snake.hpp"
+#include "../PlayingState.hpp"
+#include "../game/Snake.hpp"
 
 class SkinMenuState : public MenuState {
    public:

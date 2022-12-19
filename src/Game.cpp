@@ -3,9 +3,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include "GameState.hpp"
-#include "MainMenuState.hpp"
-#include "PlayingState.hpp"
+#include "states/GameState.hpp"
+#include "states/menu-states/MainMenuState.hpp"
+#include "states/PlayingState.hpp"
 
 extern SDL_Window* gWindow;
 
@@ -20,7 +20,7 @@ Game::Game(const std::string& name, const int width, const int height)
 
     char *basePath = SDL_GetBasePath();
     gBasePath = basePath;
-    gResourcesPath = gBasePath + "..\\Resources\\";
+    gResourcesPath = gBasePath + "..\\resources\\";
     SDL_free(basePath);
 
     pushState(PlayingState::instance());

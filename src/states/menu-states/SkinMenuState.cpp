@@ -1,5 +1,5 @@
 #include "SkinMenuState.hpp"
-#include "Game.hpp"
+#include "../../Game.hpp"
 
 void SkinMenuState::init(Game* game) {
     MenuState::init(game);

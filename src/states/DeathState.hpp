@@ -1,8 +1,8 @@
 #pragma once
 
 #include "GameState.hpp"
-#include "Texture.hpp"
-#include "Game.hpp"
+#include "../utils/Texture.hpp"
+#include "../Game.hpp"
 
 extern std::string gResourcesPath;
 

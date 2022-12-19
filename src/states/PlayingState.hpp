@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Font.hpp"
+#include "../utils/Font.hpp"
 #include "GameState.hpp"
-#include "Score.hpp"
-#include "Snake.hpp"
-#include "Texture.hpp"
-#include "coord.hpp"
-#include "Game.hpp"
+#include "game/Score.hpp"
+#include "game/Snake.hpp"
+#include "../utils/Texture.hpp"
+#include "game/Coord.hpp"
+#include "../Game.hpp"
 
 class PlayingState : public GameState {
    public:

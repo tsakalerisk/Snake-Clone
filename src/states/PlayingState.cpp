@@ -5,8 +5,8 @@
 #include <ctime>
 
 #include "DeathState.hpp"
-#include "Game.hpp"
-#include "PauseState.hpp"
+#include "../Game.hpp"
+#include "menu-states/PauseState.hpp"
 
 PlayingState::PlayingState() : snake(gResourcesPath + "worm.png") {
     gTextureBackground.loadFromFile(gResourcesPath + "ground.png");

@@ -7,4 +7,4 @@ make
 ```
 <br>
 
-![](Resources/screenshot.png)
+![](resources/screenshot.png)

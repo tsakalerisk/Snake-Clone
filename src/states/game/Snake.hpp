@@ -4,8 +4,8 @@
 
 #include <list>
 
-#include "Texture.hpp"
-#include "coord.hpp"
+#include "../../utils/Texture.hpp"
+#include "Coord.hpp"
 
 extern std::string gResourcesPath;
 
