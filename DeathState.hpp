@@ -2,6 +2,7 @@
 
 #include "GameState.hpp"
 #include "Texture.hpp"
+#include "Game.hpp"
 
 extern std::string gResourcesPath;
 
