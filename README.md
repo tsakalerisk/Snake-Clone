@@ -7,4 +7,7 @@ make
 ```
 <br>
 
-![](resources/screenshot.png)
+
+<p align="center">
+  <img src="resources/screenshot.png" />
+</p>
