@@ -8,9 +8,13 @@ class GameState;
 
 class Game {
    private:
-    bool SDL_Init(const std::string& name, int width, int height);
     bool mRunning = true;
     std::vector<GameState*> mStates;
+
+    bool initSDL(const std::string& name, int width, int height);
+    void handleEvent(SDL_Event e);
+    void update(Uint32 elapsedTime);
+    void render();
 
    public:
     const int width, height;
@@ -20,14 +24,8 @@ class Game {
 
     Game(const std::string& name, int width, int height);
     ~Game();
-
     void quit() { mRunning = false; }
-
     void changeState(GameState* state);
     void pushState(GameState* state);
     void popState();
-
-    void handleEvent(SDL_Event e);
-    void update(Uint32 elapsedTime);
-    void render();
 };

@@ -24,7 +24,7 @@ class DeathState : public GameState {
     void render(Game* game) override;
 
    private:
-    const int outline = 2;
+    const int mOutline = 2;
     const std::string mFontName = "ARCADECLASSIC.TTF";
 
     Texture mHeaderTexture, mSubtitleTexture;

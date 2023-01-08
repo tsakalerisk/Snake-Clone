@@ -5,29 +5,29 @@
 Snake::Snake(std::string skin) { mTextureWorm.loadFromFile(skin); };
 
 void Snake::init(int width, int height) {
-    gameWidth = width;
-    gameHeight = height;
+    mGameWidth = width;
+    mGameHeight = height;
     reset();
 }
 
 void Snake::empty() {
-    while (!list.empty()) list.pop_back();
+    while (!mList.empty()) mList.pop_back();
 }
 
-void Snake::addNode(coord node) { list.push_back(node); }
+void Snake::addNode(coord node) { mList.push_back(node); }
 
-void Snake::grow() { list.push_back(list.back()); };
+void Snake::grow() { mList.push_back(mList.back()); };
 
 void Snake::reset() {
     empty();
     for (int i = 0; i < 3; i++) {
-        addNode({gameWidth / 2, gameHeight / 2 + (i - 1) * 20});
+        addNode({mGameWidth / 2, mGameHeight / 2 + (i - 1) * 20});
     }
-    heading = DEFAULT;
+    mHeading = DEFAULT;
 }
 
 bool Snake::contains(coord item) {
-    for (auto const& i : list) {
+    for (auto const& i : mList) {
         if (i == item) return true;
     }
     return false;
@@ -35,20 +35,20 @@ bool Snake::contains(coord item) {
 
 void Snake::render() {
     int i = 0;
-    for (auto it = list.begin(); it != list.end(); it++) {
+    for (auto it = mList.begin(); it != mList.end(); it++) {
         double rotation;
-        int tile = SelectTile(it, &rotation, i);
+        int tile = selectTile(it, &rotation, i);
         SDL_Rect clip = {20 * tile, 0, 20, 20};
         mTextureWorm.render(it->x, it->y, &clip, rotation);
         i++;
     }
 }
 
-BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation, int i) {
-    if (*iter == *(list.begin())) {
-        *rotation = heading == DEFAULT ? 0 : heading * 90;
+BodyPart Snake::selectTile(std::list<coord>::iterator iter, double* rotation, int i) {
+    if (*iter == *(mList.begin())) {
+        *rotation = mHeading == DEFAULT ? 0 : mHeading * 90;
         return HEAD;
-    } else if (*iter == *(std::prev(list.end()))) {
+    } else if (*iter == *(std::prev(mList.end()))) {
         auto prev = std::prev(iter);
 
         // hack to figure out orientation when two tails are on top
@@ -81,8 +81,8 @@ BodyPart Snake::SelectTile(std::list<coord>::iterator iter, double* rotation, in
 }
 
 bool Snake::advance(int game_width, int game_height) {
-    coord new_head = list.front();
-    switch (heading) {
+    coord new_head = mList.front();
+    switch (mHeading) {
         case UP:
             if (new_head.y >= 20) {
                 new_head.y -= 20;
@@ -111,31 +111,31 @@ bool Snake::advance(int game_width, int game_height) {
             break;
     }
     if (contains(new_head)) return false;
-    list.pop_back();
-    list.push_front(new_head);
+    mList.pop_back();
+    mList.push_front(new_head);
     return true;
 }
 
 void Snake::turn(SDL_Keycode direction) {
     switch (direction) {
         case SDLK_UP:
-            if (heading != DOWN) {
-                heading = UP;
+            if (mHeading != DOWN) {
+                mHeading = UP;
             }
             break;
         case SDLK_DOWN:
-            if (heading != UP && heading != DEFAULT) {
-                heading = DOWN;
+            if (mHeading != UP && mHeading != DEFAULT) {
+                mHeading = DOWN;
             }
             break;
         case SDLK_LEFT:
-            if (heading != RIGHT) {
-                heading = LEFT;
+            if (mHeading != RIGHT) {
+                mHeading = LEFT;
             }
             break;
         case SDLK_RIGHT:
-            if (heading != LEFT) {
-                heading = RIGHT;
+            if (mHeading != LEFT) {
+                mHeading = RIGHT;
             }
             break;
         default:

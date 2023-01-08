@@ -13,7 +13,7 @@ extern std::string gBasePath;
 class Score {
    private:
     long value, highscore;
-    Texture gTextTexture;
+    Texture mTextTexture;
     Font font = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 
    public:
@@ -64,12 +64,12 @@ class Score {
 
         std::ostringstream score_stream;
         score_stream << "SCORE  " << std::setw(8) << std::setfill('0') << value;
-        gTextTexture.loadFromText(score_stream.str(), font, {0xff, 0xff, 0xff});
-        gTextTexture.render(info_viewport.w - gTextTexture.getWidth(), 0);
+        mTextTexture.loadFromText(score_stream.str(), font, {0xff, 0xff, 0xff});
+        mTextTexture.render(info_viewport.w - mTextTexture.getWidth(), 0);
 
         std::ostringstream highscore_stream;
         highscore_stream << "HIGH  " << std::setw(8) << std::setfill('0') << highscore;
-        gTextTexture.loadFromText(highscore_stream.str(), font, {0xff, 0xff, 0xff});
-        gTextTexture.render(info_viewport.w - gTextTexture.getWidth(), gTextTexture.getHeight());
+        mTextTexture.loadFromText(highscore_stream.str(), font, {0xff, 0xff, 0xff});
+        mTextTexture.render(info_viewport.w - mTextTexture.getWidth(), mTextTexture.getHeight());
     }
 };

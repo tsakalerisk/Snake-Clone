@@ -27,16 +27,16 @@ class PlayingState : public GameState {
     void update(Game* game, Uint32 elapsed_time) override;
     void render(Game* game) override;
 
-    void changeSnakeSkin(std::string path) { snake.changeSkin(path); }
+    void changeSnakeSkin(std::string path) { mSnake.changeSkin(path); }
 
    private:
-    Texture gTextureBackground;
-    Texture gTextureApple;
-    Texture gTextTexture;
+    Texture mTextureBackground;
+    Texture mTextureApple;
+    Texture mTextTexture;
     Font mFontNormal = Font(gResourcesPath + "ARCADECLASSIC.TTF", 20);
 
-    Snake snake;
-    coord fruit;
-    Score score;
+    Snake mSnake;
+    coord mFruit;
+    Score mScore;
     bool mMovedThisTurn = false;
 };

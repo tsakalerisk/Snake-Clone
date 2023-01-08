@@ -24,12 +24,12 @@ enum BodyPart {
 class Snake {
    private:
     Texture mTextureWorm;
-    std::list<coord> list;
-    Heading heading;
-    int gameWidth, gameHeight;
+    std::list<coord> mList;
+    Heading mHeading;
+    int mGameWidth, mGameHeight;
 
     void empty();
-    BodyPart SelectTile(std::list<coord>::iterator iter, double* rotation, int i);
+    BodyPart selectTile(std::list<coord>::iterator iter, double* rotation, int i);
     void addNode(coord node);
 
    public:
@@ -37,8 +37,8 @@ class Snake {
     void init(int width, int height);
     bool advance(int game_width, int game_height);
     bool contains(coord item);
-    coord getHead() { return list.front(); };
-    Heading getHeading() { return heading; };
+    coord getHead() { return mList.front(); };
+    Heading getHeading() { return mHeading; };
     void grow();
     void render();
     void reset();
